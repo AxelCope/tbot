@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/htagcours/tbot.git'
+                git 'https://github.com/AxelCope/tbot.git'
             }
         }
 
