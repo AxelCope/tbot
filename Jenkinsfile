@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/AxelCope/tbot.git'
+                git branch: 'main', url: 'https://github.com/AxelCope/tbot.git'
             }
         }
 
