@@ -6,26 +6,28 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Initialize') {
             steps {
-                git branch: 'main', url: 'https://github.com/AxelCope/tbot.git'
+                script {
+                    sh 'make venv && make install'
+                }
+            }
+        }
+            
+        stage('Inject Env') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'tbot-env-file', variable: 'ENV_FILE')]){
+                        sh "cat $ENV_FILE >> .env"
+                    }
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("qrgram")
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    dockerImage.inside {
-                        sh 'pytest tests'
-                    }
+                    sh 'make build'
                 }
             }
         }
@@ -33,7 +35,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dockerImage.run('-d --name qrgram-bot')
+                    sh 'make deploy'
                 }
             }
         }
@@ -41,7 +43,7 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            echo 'This will always run'
         }
     }
 }
