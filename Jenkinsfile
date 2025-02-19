@@ -24,6 +24,14 @@ pipeline {
             }
         }
 
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'make test'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
